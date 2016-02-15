@@ -6,7 +6,7 @@ class FedpegConstants:
 	# VARIOUS SETTINGS...
         user = os.environ["RPC_USER"]
         password = os.environ["RPC_PASS"]
-        sidechain_url = "http://" + user + ":" + password + "@127.0.0.1:4241"
+        sidechain_url = "http://" + user + ":" + password + "@127.0.0.1:4250"
         bitcoin_url = "http://" + user + ":" + password + "@127.0.0.1:18332"
 
 	redeem_script = "5221026484f5b5727af9a71b3641e6c8d778d655142b5a398131ee58f624c662d4ff5a21023c57fea991ff073c49b023ca167ceb355533f9a7ae633d3b75988bef6f74c21d52ae"
