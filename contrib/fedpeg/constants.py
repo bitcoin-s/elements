@@ -26,7 +26,7 @@ class FedpegConstants:
 	#bitcoin_genesis_hash = "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"
 
 	nodes =["TOM","CHRIS"]
-	my_node = "173.31.39.168"
+	my_node = "68.232.186.219"
 
 	# Set this to non-None if you're using a proxy (eg for Tor)
 	# Note that this requires ZMQ 4.1

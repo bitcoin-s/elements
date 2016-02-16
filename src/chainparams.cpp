@@ -179,7 +179,7 @@ public:
         pchMessageStart[1] = 0xa1;
         pchMessageStart[2] = 0x1f;
         pchMessageStart[3] = 0xfa;
-        nDefaultPort = 4242;
+        nDefaultPort = 4251;
         nEnforceBlockUpgradeMajority = 51;
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
@@ -195,7 +195,7 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("bluematt.me", "alpha-seed.bluematt.me"));
+        vSeeds.push_back(CDNSSeedData("suredbits.com", "alpha-testnet.seed.suredbits.com"));
 
         base58Prefixes[PUBKEY_ADDRESS] = list_of(111);
         base58Prefixes[SCRIPT_ADDRESS] = list_of(196);
