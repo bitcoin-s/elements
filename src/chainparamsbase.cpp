@@ -26,7 +26,7 @@ public:
     {
         networkID = CBaseChainParams::MAIN;
         nRPCPort = 8332;
-        strDataDir = "alphamain";
+        strDataDir = "hawkeyemain";
     }
 };
 static CBaseMainParams mainParams;
@@ -41,7 +41,7 @@ public:
     {
         networkID = CBaseChainParams::TESTNET;
         nRPCPort = 4250;
-        strDataDir = "alphatestnet3";
+        strDataDir = "hawkeyetestnet";
     }
 };
 static CBaseTestNetParams testNetParams;
@@ -55,7 +55,7 @@ public:
     CBaseRegTestParams()
     {
         networkID = CBaseChainParams::REGTEST;
-        strDataDir = "alpharegtest";
+        strDataDir = "hawkeyeregtest";
     }
 };
 static CBaseRegTestParams regTestParams;
