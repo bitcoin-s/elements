@@ -129,7 +129,7 @@ public:
         genesis.nVersion = 1;
         genesis.nTime    = 1231006505;
         if (scriptDestination.empty()) {
-            scriptDestination = CScript() << OP_2 << ParseHex("0294a8f794a42554419ecf4722cdd506c32ffe7b8807bab1cb9a0d5fa9627daf25") << ParseHex("03ad7adb8c820a859d269a36dde805251dea83a0e2bce4375dff3bc766822fdd8d") << OP_2 << OP_CHECKMULTISIG;
+            scriptDestination = CScript() << OP_2 << ParseHex("026484f5b5727af9a71b3641e6c8d778d655142b5a398131ee58f624c662d4ff5a") << ParseHex("03ad7adb8c820a859d269a36dde805251dea83a0e2bce4375dff3bc766822fdd8d") << ParseHex("022728240e403e91dc15abf92c612617bccf73d1a9f8451bf596e5b450ac79d7e0") << OP_3 << OP_CHECKMULTISIG;
         }
         genesis.proof = CProof(scriptDestination, CScript()); // genesis block gets a PoW pass
 
@@ -192,6 +192,7 @@ public:
         vFixedSeeds.clear();
         vSeeds.clear();
 
+        vSeeds.push_back(CDNSSeedData("suredbits.com", "alpha-testnet.seed.suredbits.com"));
 
         base58Prefixes[PUBKEY_ADDRESS] = list_of(111);
         base58Prefixes[SCRIPT_ADDRESS] = list_of(196);

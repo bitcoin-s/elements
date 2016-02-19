@@ -12,7 +12,7 @@ from httplib import CannotSendRequest, BadStatusLine
 import socket
 
 settings = FedpegConstants()
-port = 14242
+port = 14272
 
 sidechain = [AuthServiceProxy(settings.sidechain_url), AuthServiceProxy(settings.sidechain_url)]
 # We need to do a rescan on bitcoin, so we set a huge timeout
