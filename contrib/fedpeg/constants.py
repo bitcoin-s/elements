@@ -16,8 +16,8 @@ class FedpegConstants:
 	#blocksigning_private_key = os.environ["BLOCKSIGNING_PRIV_KEY"] 
 	blocksigning_private_key = "cP4JPAemAJCJBVjeH77WFVqjz8QfToAP336r79yRGqvYbYy7JzH7"
 	functionary_private_key = os.environ["FUNCTIONARY_PRIV_KEY"]
-
 	bitcoin_tx_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../bitcoin-tx")
+
 	contracthashtool_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../../contracthashtool/contracthashtool")
 	is_testnet = 1
 
@@ -26,8 +26,8 @@ class FedpegConstants:
 	#Testnet:
 	#bitcoin_genesis_hash = "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943"
 
-	nodes =["108.61.19.5","173.31.39.168","179.43.155.194"]
-	my_node = "108.61.19.5"
+	nodes =["108.61.68.147","173.31.39.168","179.43.155.194"]
+	my_node = "108.61.68.147"
 
 	# Set this to non-None if you're using a proxy (eg for Tor)
 	# Note that this requires ZMQ 4.1

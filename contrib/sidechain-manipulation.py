@@ -87,6 +87,7 @@ class UTXOFinder:
 	in_txid = ""
 	in_vout = -1
 	in_value = -1
+	in_scriptpubkey = ""
 
 	def check_tx(self, tx):
 		for vout, output in enumerate(tx["vout"]):
@@ -98,6 +99,7 @@ class UTXOFinder:
 					if txo == None:
 						continue
 					self.in_value = Decimal(txo["value"])
+					self.in_scriptpubkey = txo["scriptPubKey"]["hex"]
 			if self.in_value > self.target_value:
 				break
 
@@ -118,6 +120,7 @@ class UTXOFinder:
 				if txo == None:
 					continue
 				self.in_value = Decimal(txo["value"])
+				self.in_scriptpubkey = txo["scriptPubKey"]["hex"]
 			else:
 				block = sidechain.getblock(sidechain.getblockhash(i))
 				for tx in sidechain.batch_([["getrawtransaction", txhash, 1] for txhash in block["tx"]]):
@@ -192,8 +195,8 @@ try:
 
 	elif args.command == "claim-on-sidechain":
 		raw_bitcoin_tx = bitcoin.getrawtransaction(args.sidechainRcvTx, 1)
-		if not "confirmations" in raw_bitcoin_tx or raw_bitcoin_tx["confirmations"] <= 10:
-			print("Please wait for at least 10 confirmations on the bitcoin transaction first")
+		if not "confirmations" in raw_bitcoin_tx or raw_bitcoin_tx["confirmations"] <= 5:
+			print("Please wait for at least 5 confirmations on the bitcoin transaction first")
 			exit(1)
 		raw_bitcoin_tx_hex = bitcoin.getrawtransaction(args.sidechainRcvTx, 0)
 
@@ -228,12 +231,15 @@ try:
 		in_txid = utxo.in_txid
 		in_vout = utxo.in_vout
 		in_value = utxo.in_value
+		in_scriptpubkey = utxo.in_scriptpubkey
 
 		print("Redeeming from utxo %s:%.16g (value %.16g, refund %.16g)" % (in_txid, in_vout, in_value, in_value - value))
 
+		print("vout: %s" % in_vout)
+		print("value: %s" % in_value)
 		withdrawkeys = 'withdrawkeys:{"contract": "%s", "txoutproof": "%s", "tx": "%s", "nout": %d, "secondScriptPubKey": "%s", "secondScriptSig": "%s", "coinbase": "%s"}' % (full_contract, spv_proof, raw_bitcoin_tx_hex, nout, secondScriptPubKey, secondScriptSig, raw_coinbase_tx_hex)
 		out_scriptPubKey = "OP_IF %d 0x20%s %d 0 0x14%s 0x20%s OP_REORGPROOFVERIFY OP_ELSE 144 OP_NOP3 OP_DROP OP_HASH160 0x14%s OP_EQUAL OP_ENDIF" % (bitcoin_block["height"], args.sidechainRcvTx, nout, secondScriptPubKeyHash, inverse_bitcoin_genesis_hash, raw_dest)
-		relock_scriptPubKey = "0x20%s 0x14%s OP_WITHDRAWPROOFVERIFY" % (inverse_bitcoin_genesis_hash, secondScriptPubKeyHash)
+		relock_scriptPubKey = "0x%s" % in_scriptpubkey
 
 		cht = os.popen('%s -create \'set=%s\' in=%s:%d:%s:-1 outscript=%s:"%s" outscript=%s:"%s" withdrawsign' % (sidechain_tx_path, withdrawkeys, in_txid, in_vout, str(in_value), str(value), out_scriptPubKey, str(in_value - value), relock_scriptPubKey))
 		res_tx = cht.read().split("\n")[0]

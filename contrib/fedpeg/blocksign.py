@@ -38,6 +38,7 @@ class WatchPeerController(RotatingConsensus):
 		sys.stdout.write("Got signatures from %s, now combining..." % str([x[0] for x in peer_messages if x[1][0] == "0" and x[1][1] == "0" and len(x[1]) == 132]))
 		sys.stdout.flush()
 		res = sidechain.combineblocksigs(self.round_local_block_hex, [x[1] for x in peer_messages])
+		print("res: %s" % res)
 		print("[x[1]]: %s" % [x[1] for x in peer_messages])
 		if res["complete"]:
 			sys.stdout.write("got completely signed block, submitting to sidechaind...")

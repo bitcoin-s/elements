@@ -1448,7 +1448,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                                     return set_error(serror, SCRIPT_ERR_WITHDRAW_VERIFY_FORMAT);
 
                                 // Duplicated in chainparams.cpp
-                                CScript scriptDestination(CScript() << OP_2 << ParseHex("026484f5b5727af9a71b3641e6c8d778d655142b5a398131ee58f624c662d4ff5a") << ParseHex("03ad7adb8c820a859d269a36dde805251dea83a0e2bce4375dff3bc766822fdd8d") << ParseHex("022728240e403e91dc15abf92c612617bccf73d1a9f8451bf596e5b450ac79d7e0") << OP_3 << OP_CHECKMULTISIG);
+                                CScript scriptDestination(CScript() << OP_2 << ParseHex("026484f5b5727af9a71b3641e6c8d778d655142b5a398131ee58f624c662d4ff5a") << ParseHex("02d11273b94dbbeb88e716eae457e7d33065e9afde914e5ce6e9f68bbb0ee3e707") << ParseHex("03cfb45ab1e09adc218d82adb316930d493060e8d8f140c7fd8b4f02e2ec4920b4") << OP_3 << OP_CHECKMULTISIG);
                                 {
                                     CScript::iterator sdpc = scriptDestination.begin();
                                     vector<unsigned char> vch;
