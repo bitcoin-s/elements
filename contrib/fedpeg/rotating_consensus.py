@@ -96,6 +96,7 @@ class RotatingConsensus:
 				print("Starting round with master %s" % self.nodes[step].host)
 				sleep(self.interval / 4)
 				msg = self.nodes[step].read_message()
+				print("master msg: %s" % msg)
 
 				if msg == None:
 					print("Missed message from master")
@@ -103,6 +104,7 @@ class RotatingConsensus:
 					continue
 
 				broadcast_msg = self._recv_master_msg(msg)
+				print("broadcastmsg: %s" % broadcast_msg)
 				if broadcast_msg == None:
 					print("recv_master_msg threw or returned None")
 					self._round_failed()
@@ -118,6 +120,8 @@ class RotatingConsensus:
 			msgs = []
 			for node in self.nodes:
 				msg = node.read_message()
+				print("msg: %s" % msg)
+				print("msgs: %s" % msgs)
 				if msg != None:
 					msgs.append((node.host, msg))
 

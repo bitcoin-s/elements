@@ -1448,7 +1448,7 @@ bool EvalScript(vector<vector<unsigned char> >& stack, const CScript& script, un
                                     return set_error(serror, SCRIPT_ERR_WITHDRAW_VERIFY_FORMAT);
 
                                 // Duplicated in chainparams.cpp
-                                CScript scriptDestination(CScript() << OP_5 << ParseHex("0269992fb441ae56968e5b77d46a3e53b69f136444ae65a94041fc937bdb28d933") << ParseHex("021df31471281d4478df85bfce08a10aab82601dca949a79950f8ddf7002bd915a") << ParseHex("02174c82021492c2c6dfcbfa4187d10d38bed06afb7fdcd72c880179fddd641ea1") << ParseHex("033f96e43d72c33327b6a4631ccaa6ea07f0b106c88b9dc71c9000bb6044d5e88a") << ParseHex("0313d8748790f2a86fb524579b46ce3c68fedd58d2a738716249a9f7d5458a15c2") << ParseHex("030b632eeb079eb83648886122a04c7bf6d98ab5dfb94cf353ee3e9382a4c2fab0") << ParseHex("02fb54a7fcaa73c307cfd70f3fa66a2e4247a71858ca731396343ad30c7c4009ce") << OP_7 << OP_CHECKMULTISIG);
+                                CScript scriptDestination(CScript() << OP_2 << ParseHex("026484f5b5727af9a71b3641e6c8d778d655142b5a398131ee58f624c662d4ff5a") << ParseHex("03ad7adb8c820a859d269a36dde805251dea83a0e2bce4375dff3bc766822fdd8d") << ParseHex("022728240e403e91dc15abf92c612617bccf73d1a9f8451bf596e5b450ac79d7e0") << OP_3 << OP_CHECKMULTISIG);
                                 {
                                     CScript::iterator sdpc = scriptDestination.begin();
                                     vector<unsigned char> vch;
