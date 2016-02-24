@@ -93,7 +93,7 @@ public:
         pchMessageStart[1] = 0xbe;
         pchMessageStart[2] = 0xb4;
         pchMessageStart[3] = 0xd9;
-        scriptAlert = CScript() << CScript::EncodeOP_N(2) << ParseHex("0322f29893482dad4de143544fa623b6f68406c61d24d021652f627a6eecb0bd93") << ParseHex("0230ec0caeb5ff100bd4be3d8dbeb00bcbbf1ad98d87fbbaff533d20754ac10025") << ParseHex("03ec379a7e837ad1310ac9b35dca14e44eaaf4ce0289d12ccf6f61785fc377f528") << CScript::EncodeOP_N(3) << OP_CHECKMULTISIG;
+        scriptAlert = CScript() << CScript::EncodeOP_N(1) << ParseHex("0324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e") << CScript::EncodeOP_N(1) << OP_CHECKMULTISIG;
         nDefaultPort = 8333;
         bnProofOfWorkLimit = ~uint256(0) >> 32;
         nSubsidyHalvingInterval = 210000;
@@ -129,19 +129,14 @@ public:
         genesis.nVersion = 1;
         genesis.nTime    = 1231006505;
         if (scriptDestination.empty()) {
-            scriptDestination = CScript() << OP_5 << ParseHex("027d5d62861df77fc9a37dbe901a579d686d1423be5f56d6fc50bb9de3480871d1") << ParseHex("03b41ea6ba73b94c901fdd43e782aaf70016cc124b72a086e77f6e9f4f942ca9bb") << ParseHex("02be643c3350bade7c96f6f28d1750af2ef507bc1f08dd38f82749214ab90d9037") << ParseHex("021df31471281d4478df85bfce08a10aab82601dca949a79950f8ddf7002bd915a") << ParseHex("0320ea4fcf77b63e89094e681a5bd50355900bf961c10c9c82876cb3238979c0ed") << ParseHex("021c4c92c8380659eb567b497b936b274424662909e1ffebc603672ed8433f4aa1") << ParseHex("027841250cfadc06c603da8bc58f6cd91e62f369826c8718eb6bd114601dd0c5ac") << OP_7 << OP_CHECKMULTISIG;
+            scriptDestination = CScript() << OP_5 << ParseHex("0324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e") << OP_1 << OP_CHECKMULTISIG;
         }
         genesis.proof = CProof(scriptDestination, CScript()); // genesis block gets a PoW pass
 
         hashGenesisBlock = genesis.GetHash();
         mapCheckpoints[0] = hashGenesisBlock;
 
-        vSeeds.push_back(CDNSSeedData("bitcoin.sipa.be", "seed.bitcoin.sipa.be"));
-        vSeeds.push_back(CDNSSeedData("bluematt.me", "dnsseed.bluematt.me"));
-        vSeeds.push_back(CDNSSeedData("dashjr.org", "dnsseed.bitcoin.dashjr.org"));
-        vSeeds.push_back(CDNSSeedData("bitcoinstats.com", "seed.bitcoinstats.com"));
-        vSeeds.push_back(CDNSSeedData("xf2.org", "bitseed.xf2.org"));
-
+        vSeeds.push_back(CDNSSeedData("suredbits.com", "alpha-testnet.seed.suredbits.com"));
         base58Prefixes[PUBKEY_ADDRESS] = list_of(0);
         base58Prefixes[SCRIPT_ADDRESS] = list_of(5);
         base58Prefixes[BLINDED_ADDRESS]= list_of(10);
@@ -179,7 +174,7 @@ public:
         pchMessageStart[1] = 0xa1;
         pchMessageStart[2] = 0x1f;
         pchMessageStart[3] = 0xfa;
-        nDefaultPort = 4242;
+        nDefaultPort = 4250;
         nEnforceBlockUpgradeMajority = 51;
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;
@@ -195,7 +190,7 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        vSeeds.push_back(CDNSSeedData("bluematt.me", "alpha-seed.bluematt.me"));
+
 
         base58Prefixes[PUBKEY_ADDRESS] = list_of(111);
         base58Prefixes[SCRIPT_ADDRESS] = list_of(196);
