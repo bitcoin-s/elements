@@ -129,7 +129,7 @@ public:
         genesis.nVersion = 1;
         genesis.nTime    = 1231006505;
         if (scriptDestination.empty()) {
-            scriptDestination = CScript() << OP_5 << ParseHex("0324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e") << OP_1 << OP_CHECKMULTISIG;
+            scriptDestination = CScript() << OP_1 << ParseHex("0324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e") << OP_1 << OP_CHECKMULTISIG;
         }
         genesis.proof = CProof(scriptDestination, CScript()); // genesis block gets a PoW pass
 
