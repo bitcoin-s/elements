@@ -4,6 +4,7 @@ import sys, os, traceback, argparse
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../python-bitcoinrpc"))
 from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
 from decimal import *
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fedpeg/"))
 from constants import FedpegConstants
 
 # Command line arguments
@@ -51,12 +52,13 @@ parser_send_mainchain.add_argument('coinAmt', help = 'Amount of coins to pay ' \
 args = parser.parse_args()
 
 # VARIOUS SETTINGS...
-	settings = FedpegConstants
-	sidechain_url = settings.sidechain_url
-	bitcoin_url = settings.bitcoin_url
-	secondScriptPubKeyHash = settings.secondScriptPubKeyHash
-	redeem_script = settings.redeem_script
-	secondScriptPubKey = settings.secondScriptPubKey
+settings = FedpegConstants
+
+sidechain_url = settings.sidechain_url
+bitcoin_url = settings.bitcoin_url
+secondScriptPubKeyHash = settings.secondScriptPubKeyHash
+redeem_script = settings.redeem_script
+secondScriptPubKey = settings.secondScriptPubKey
 
 #Bitcoin:
 bitcoin_genesis_hash = "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"

@@ -9,8 +9,8 @@ class FedpegConstants:
         sidechain_url = "http://" + user + ":" + password + "@127.0.0.1:4250"
         bitcoin_url = "http://" + user + ":" + password + "@127.0.0.1:18332"
 
-	redeem_script = "512103b6da3a5a16ef4fbd359979250e03bb5e97f6ab46935bd2cb9a1a12406801166451ae"
-	redeem_script_address = "2N83SZg4MKSMm9x3wwGeaf3be5dKxFvohwW"
+	redeem_script = "51210324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e51ae"
+	redeem_script_address = "2NBV7zZ6V371pkgZqxkAQLh3sDQvA1xtMk8"
 	secondScriptPubKeyHash = "9eac001049d5c38ece8996485418421f4a01e2d7"
 	secondScriptPubKey = "OP_DROP 144 OP_LESSTHANOREQUAL"
 	#blocksigning_private_key = os.environ["BLOCKSIGNING_PRIV_KEY"] 

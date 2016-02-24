@@ -11,7 +11,7 @@ from httplib import CannotSendRequest
 
 
 settings = FedpegConstants()
-port = 14252
+port = 14262
 
 sidechain = AuthServiceProxy(settings.sidechain_url)
 
@@ -55,7 +55,7 @@ class WatchPeerController(RotatingConsensus):
 sidechain.importprivkey(settings.blocksigning_private_key)
 
 settings.nodes.remove(settings.my_node)
-WatchPeerController(settings.nodes, settings.my_node, port, 60, settings.socks_proxy)
+WatchPeerController(settings.nodes, settings.my_node, port, 5, settings.socks_proxy)
 
 while True:
-	sleep(10)
+	sleep(1)
