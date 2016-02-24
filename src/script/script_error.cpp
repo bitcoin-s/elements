@@ -74,7 +74,7 @@ const char* ScriptErrorString(const ScriptError serror)
         case SCRIPT_ERR_WITHDRAW_VERIFY_LOCKTX:
             return "Withdraw proof validation failed - locking transaction misformatted";
         case SCRIPT_ERR_WITHDRAW_VERIFY_OUTPUT:
-            return "Withdraw proof validation failed - output does not match expected";
+            return "Withdraw proof validation failed - output does not match expected at line number %d in file %s\n", __LINE__, __FILE__);
         case SCRIPT_ERR_WITHDRAW_VERIFY_LOCKTIME:
             return "Withdraw proof validation failed - locktime was not set correctly";
         case SCRIPT_ERR_WITHDRAW_VERIFY_SECONDSCRIPT:

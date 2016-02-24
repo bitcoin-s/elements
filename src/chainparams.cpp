@@ -174,7 +174,7 @@ public:
         pchMessageStart[1] = 0xa1;
         pchMessageStart[2] = 0x1f;
         pchMessageStart[3] = 0xfa;
-        nDefaultPort = 4250;
+        nDefaultPort = 4251;
         nEnforceBlockUpgradeMajority = 51;
         nRejectBlockOutdatedMajority = 75;
         nToCheckBlockUpgradeMajority = 100;

@@ -26,7 +26,7 @@ public:
     {
         networkID = CBaseChainParams::MAIN;
         nRPCPort = 8332;
-        strDataDir = "alphamain";
+        strDataDir = "tomcoin";
     }
 };
 static CBaseMainParams mainParams;
@@ -40,8 +40,8 @@ public:
     CBaseTestNetParams()
     {
         networkID = CBaseChainParams::TESTNET;
-        nRPCPort = 4241;
-        strDataDir = "alphatestnet3";
+        nRPCPort = 4250;
+        strDataDir = "tomcointest";
     }
 };
 static CBaseTestNetParams testNetParams;
@@ -55,7 +55,7 @@ public:
     CBaseRegTestParams()
     {
         networkID = CBaseChainParams::REGTEST;
-        strDataDir = "alpharegtest";
+        strDataDir = "tomcoinregtest";
     }
 };
 static CBaseRegTestParams regTestParams;
