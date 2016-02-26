@@ -102,7 +102,7 @@ redeem_script = settings.redeem_script
 secondScriptPubKey = settings.secondScriptPubKey
 ```
 
-Open `contrib/fedpeg/constants.py` and configure your "Various Settings". Also change the [nodes](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/constants.py#L26) and `my node`:
+Open `contrib/fedpeg/constants.py` and configure your "Various Settings". Instructions for creating a redeem_script below. Also change the [nodes](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/constants.py#L26) and `my node`:
 ```python
 # VARIOUS SETTINGS...
 user = os.environ["RPC_USER"]
@@ -123,7 +123,7 @@ nodes =["IP address of each functionary/blocksigner"]
 my_node = "Your IP"
 ```
 
-The first thing you need to do is change the port number on [L9](https://github.com/christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L9) to the port number you specified above inside of your [src/chainparamsbase.cpp](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp). You do NOT change the `bitcoin_url` port. 
+Change the port number on [L9](https://github.com/christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L9) to the port number you specified above inside of your [src/chainparamsbase.cpp](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp). You do NOT change the `bitcoin_url` port. 
 
 We need to create a unique `redeem_script` and `redeem_script_address` for your sidechain. To do this, take the public key[s] in `chainparmas.cpp` and use the `createmultisig` RPC, which will return an address and a redeem script. Adjust [L12-L13](https://github.com/Christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L12-L13) in `constants.py` with the values given by the following rpc command:
 ```
