@@ -13,7 +13,7 @@ Please look over the [Elements Project](https://github.com/ElementsProject/eleme
 Try to follow this order to avoid unneccessary recompilations. This is an extension of the instructions to "Run a fedpeg operator" in the Element's alpha README.
 
 Edit your `.bashrc`. We'll come back to this file later:
-```
+```shell
 RPC_USER=your_username_here
 RPC_PASSWORD=your_super_random_long_password_here
 export RPC_USER
@@ -21,7 +21,7 @@ export RPC_PASS
 ```
 
 Bitcoin testnet (mainchain):
-```
+```shell
 git clone https://github.com/ElementsProject/elements
 cd elements
 git checkout mainchain
@@ -30,12 +30,12 @@ mv src/bitcoin{d,-cli,-tx} ../
 ```
 
 Run testnet. If you get an error asking to rebuild the blockchain, replace `-txindex` with `-reindex`. If you have to rebuild it, continue these instructions while it syncs:
-```
+```shell
 ./bitcoind -rpcuser=$RPC_USER -rpcpassword=$RPC_PASS -testnet -txindex -daemon
 ```
 
 Checkout `alpha`. We won't compile just yet. Make sure it is up-to-date with the Elements repo alpha branch:
-```
+```shell
 git checkout alpha
 ```
 
@@ -51,14 +51,14 @@ bitcoin-cli -testnet validateaddress [address]
 
 ####C++
 You should be on your sidechain branch (alpha). This is the part where we uniquely create your sidechain with the public keys of each functionary/blocksigner. Open `src/chainparams.cpp` and edit the public keys, ports, and seeds. [Line 132](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L132) has the public keys for each functionary/blocksigner: 
-```
+```c++
 scriptDestination = CScript() << OP_5 << ParseHex("027d5d62861df77fc9a37dbe901a579d686d1423be5f56d6fc50bb9de3480871d1") << ParseHex("03b41ea6ba73b94c901fdd43e782aaf70016cc124b72a086e77f6e9f4f942ca9bb") << ParseHex("02be643c3350bade7c96f6f28d1750af2ef507bc1f08dd38f82749214ab90d9037") << ParseHex("021df31471281d4478df85bfce08a10aab82601dca949a79950f8ddf7002bd915a") << ParseHex("0320ea4fcf77b63e89094e681a5bd50355900bf961c10c9c82876cb3238979c0ed") << ParseHex("021c4c92c8380659eb567b497b936b274424662909e1ffebc603672ed8433f4aa1") << ParseHex("027841250cfadc06c603da8bc58f6cd91e62f369826c8718eb6bd114601dd0c5ac") << OP_7 << OP_CHECKMULTISIG;
 ```
 For simplicity, let's replace the current 5-of-7 multisig with a 1-of-1. Change to: 
-```
+```c++
 scriptDestination = CScript() << OP_1 << ParseHex("[paste public key we just generated]") << OP_1 << OP_CHECKMULTISIG;
 ```
-[Line 139](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L139) has the DNS seeds. If more you have more than 1 functionary/blocksigner, you'll need to create a DNS of your own in order to communicate. Replace the current 5 seeds with your own. Also delete the testnet seed on [L198](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L198). 
+[Line 139](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L139) has the DNS seeds. If you have more than 1 functionary/blocksigner, you'll need to create a DNS of your own in order to communicate. Replace the current 5 seeds with the seeds of your signers. Also delete the testnet seed on [L198](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L198). 
 
 Still in `src/chainparams.cpp`, change the testnet port number on [L182](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L182) - this is the unique channel of communication for your sidechain so don't just increase/decrease it by one. This is one of two ports we'll change. Call this one the protocol port.
 
@@ -68,14 +68,14 @@ Open `src/chainparamsbase.cpp`, change the port on [L43](https://github.com/Elem
 
 At this point, you can compile your sidechain in the same way we compiled the mainchain earlier. There are a few help/console string messages you can change in `main.cpp, init.cpp, bitcoind.cpp`, but it's not necessary for basic functional purposes. 
 
-```
+```shell
 ./autogen.sh && ./configure && make
 ```
 
 If there's a error in your compilation, go back to the file the compilation failed on and fix the error. Make sure to run `make clean` before compilating again. You'll only need to recompile your sidechain branch, not the bitcoin testnet `mainchain` branch.
 
 Upon successful compilation:
-```
+```shell
 mv src/alpha{d,-cli,-tx} ../
 ./alphad -rpcuser=$RPC_USER -rpcpassword=$RPC_PASS -testnet -rpcconnect=127.0.0.1 -rpcconnectport=18332 -tracksidechain=all -txindex -blindtrust=false -daemon
 ```
@@ -84,14 +84,14 @@ mv src/alpha{d,-cli,-tx} ../
 
 Once your sidechain server is running, we can edit the Python files with your unique details. Before we add your unique info, let's modify some settings for ease of use. Open `contrib/sidechain-manipulation.py`. Import `constants.py` by adding this to the top of the `sidechain-manipulation.py` file: 
 
-```
+```python
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fedpeg/"))
 from constants import FedpegConstants
 ```
 
 Change the ["Various Settings"](https://github.com/ElementsProject/elements/blob/alpha/contrib/sidechain-manipulation.py#L52):
 
-```
+```python
 # VARIOUS SETTINGS...
 settings = FedpegConstants
 
@@ -103,7 +103,7 @@ secondScriptPubKey = settings.secondScriptPubKey
 ```
 
 Open `contrib/fedpeg/constants.py` and configure your "Various Settings". Also change the [nodes](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/constants.py#L26) and `my node`:
-```
+```python
 # VARIOUS SETTINGS...
 user = os.environ["RPC_USER"]
 password = os.environ["RPC_PASS"]
@@ -119,19 +119,19 @@ functionary_private_key = os.environ["FUNCTIONARY_PRIV_KEY"]
 
 ....
 
-nodes =["IP address of each functionary/blocksigner"]
+nodes =["IP address of each functionary/blocksigner...","...","..."]
 my_node = "Your IP"
 ```
 
 We need to create a unique redeem script and redeem script address for your sidechain. To do this, take the public key[s] in `chainparmas.cpp` and use the `createmultisig` RPC, which will return an address and a redeem script. Adjust the `constants.py` file with your returned values:
-```
+```shell
 alpha-cli -testnet createmultisig sigs_required "[\"public key\", ...]" 
 ```
 
 You can test this by decoding the redeem script (`alpha-cli -testnet decodescript [redeem script]), which will return a JSON object with the public keys, signatures required and P2SH address. 
 
 Open the `.bashrc` file we edited earlier and add this to the bottom: 
-```
+```shell
 BLOCKSIGNING_PRIV_KEY=[private key generated earlier - associated to the public key in chainparmas.cpp]
 FUNCTIONARY_PRIV_KEY=[some separate generated private key]
 export BLOCKSIGNING_PRIV_KEY
@@ -139,13 +139,13 @@ export FUNCTIONARY_PRIV_KEY
 ```
 
 Also be sure to import both private keys into your sidechain wallet using the RPC command: 
-```
+```shell
 alpha-cli -testnet importprivkey [private key]
 ```
 
 The default sidechain blocktimes are set at 60 seconds. You can adjust the time on [L58](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L58) of `contrib/fedpeg/blocksign.py`. Be sure to change the port number in [blocksign.py](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L14) if you have multiple functionaries/blocksigners.
 
 From here, you can follow [Step 6](https://github.com/ElementsProject/elements/blob/alpha/alpha-README.md#to-move-money-into-elements-alpha) of the Elements-Alpha README to move money into the sidechain. After the "claim-on-sidechain" part, run `blocksign.py` to run the blocksigning script(remember you can shorten block times):
-```
+```shell
 ./contrib/fedpeg/blocksign.py
 ```
