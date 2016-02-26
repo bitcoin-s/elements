@@ -143,6 +143,9 @@ Also be sure to import both private keys into your sidechain wallet using the RP
 alpha-cli -testnet importprivkey [private key]
 ```
 
-The default sidechain blocktimes are set at 60 seconds. You can adjust the time on [L58](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L58) of `contrib/fedpeg/blocksign.py`. Be sure to change the port numbers in `blocksign.py` and `rotating_consensus.py` if you have multiple functionaries/blocksigners.
+The default sidechain blocktimes are set at 60 seconds. You can adjust the time on [L58](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L58) of `contrib/fedpeg/blocksign.py`. Be sure to change the port number in [blocksign.py](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L14) if you have multiple functionaries/blocksigners.
 
-From here, you can follow [Step 6](https://github.com/ElementsProject/elements/blob/alpha/alpha-README.md#to-move-money-into-elements-alpha) of the Elements-Alpha README to move money into the sidechain.
+From here, you can follow [Step 6](https://github.com/ElementsProject/elements/blob/alpha/alpha-README.md#to-move-money-into-elements-alpha) of the Elements-Alpha README to move money into the sidechain. After the "claim-on-sidechain" part, run `blocksign.py` to run the blocksigning script(remember you can shorten block times):
+```
+./contrib/fedpeg/blocksign.py
+```
