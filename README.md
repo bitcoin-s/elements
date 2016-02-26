@@ -34,9 +34,11 @@ Run testnet. If you get an error asking to rebuild the blockchain, replace `-txi
 ./bitcoind -rpcuser=$RPC_USER -rpcpassword=$RPC_PASS -testnet -txindex -daemon
 ```
 
-Checkout `alpha`. We won't compile just yet. Make sure it is up-to-date with the Elements repo alpha branch:
+Checkout `alpha`. We won't compile just yet. Make sure it is up-to-date with the Elements repo alpha branch and `pull` a [patch](https://github.com/TomMcCabe/elements/tree/patch) for a few code changes that will consolidate our settings in `sidechain-manipulation.py` and `constants.py`, as well as a [secp256k1 fix by Instagibbs](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf) in `src/script/interpreter.cpp` (included in the pull) :
 ```shell
 git checkout alpha
+git remote add patch https://github.com/TomMcCabe/elements.git
+git pull patch patch
 ```
 
 With bitcoin testnet, generate an address and obtain the private/public key.
@@ -58,11 +60,11 @@ For simplicity, let's replace the current 5-of-7 multisig with a 1-of-1. Change 
 ```c++
 scriptDestination = CScript() << OP_1 << ParseHex("[paste public key we just generated]") << OP_1 << OP_CHECKMULTISIG;
 ```
-[Line 139](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L139) has the DNS seeds. If you have more than 1 functionary/blocksigner, you'll need to create a DNS of your own in order to communicate. Replace the current 5 seeds with the seeds of your signers. Also delete the testnet seed on [L198](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L198). 
+[Line 139](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L139) has the DNS seeds. If you have more than 1 functionary/blocksigner, you'll need to create a DNS of your own in order to communicate. Replace the current 5 seeds with the seeds of your signers. Also delete the testnet seed on [L198](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L198). If you're creating a local 1-of-1 sidechain on your machine that won't be communicating on any port, you don't need to create any seeds or configure the protocol port.
 
 Still in `src/chainparams.cpp`, change the testnet port number on [L182](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L182) - this is the unique channel of communication for your sidechain so don't just increase/decrease it by one. This is one of two ports we'll change. Call this one the protocol port.
 
-You need to duplicate what you did on L132 of `src/chainparams.cpp` on [L1451](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1451) of `src/script/interpreter.cpp`. (Note: refrain from copying and pasting the line from `chainparams.cpp` to `interpreter.cpp` as they're not identical. Just replace the public keys and op codes numbers on L1452 with your own.) Also in `src/script/interpreter.cpp`, change [L1469](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1469) using [Instagibbs' fix](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf).
+You need to duplicate what you did on L132 of `src/chainparams.cpp` on [L1451](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1451) of `src/script/interpreter.cpp`. Refrain from copying and pasting the line from `chainparams.cpp` to `interpreter.cpp` as they're not identical. Just replace the public keys and op codes numbers on L1452 with your own.
 
 Open `src/chainparamsbase.cpp`, change the port on [L43](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp#L43). This is the RPC port - keep it different from the protocol port (i.e. alpha's ports are 4241 and 4242). On L44 of the same file, you can change the name of the data directory for your sidechain (where your blocks, .dat files, etc. will be stored). 
 
@@ -82,56 +84,19 @@ mv src/alpha{d,-cli,-tx} ../
 
 ####Python
 
-Once your sidechain server is running, we can edit the Python files with your unique details. Before we add your unique info, let's modify some settings for ease of use. Open `contrib/sidechain-manipulation.py`. Import `constants.py` by adding this to the top of the `sidechain-manipulation.py` file: 
+Once your sidechain server is running, we can edit the Python files with your unique details. 
 
-```python
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fedpeg/"))
-from constants import FedpegConstants
-```
-
-Change the ["Various Settings"](https://github.com/ElementsProject/elements/blob/alpha/contrib/sidechain-manipulation.py#L52):
-
-```python
-# VARIOUS SETTINGS...
-settings = FedpegConstants
-
-sidechain_url = settings.sidechain_url
-bitcoin_url = settings.bitcoin_url
-secondScriptPubKeyHash = settings.secondScriptPubKeyHash
-redeem_script = settings.redeem_script
-secondScriptPubKey = settings.secondScriptPubKey
-```
-
-Open `contrib/fedpeg/constants.py` and configure your "Various Settings". Instructions for creating a redeem_script below. Also change the [nodes](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/constants.py#L26) and `my node`:
-```python
-# VARIOUS SETTINGS...
-user = os.environ["RPC_USER"]
-password = os.environ["RPC_PASS"]
-sidechain_url = "http://" + user + ":" + password + "@127.0.0.1:PORTNUMBER"
-bitcoin_url = "http://" + user + ":" + password + "@127.0.0.1:18332"
-
-redeem_script = "51210324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e51ae"
-redeem_script_address = "2NBV7zZ6V371pkgZqxkAQLh3sDQvA1xtMk8"
-secondScriptPubKeyHash = "9eac001049d5c38ece8996485418421f4a01e2d7"
-secondScriptPubKey = "OP_DROP 144 OP_LESSTHANOREQUAL"
-blocksigning_private_key = os.environ["BLOCKSIGNING_PRIV_KEY"] 
-functionary_private_key = os.environ["FUNCTIONARY_PRIV_KEY"]
-
-....
-
-nodes =["IP address of each functionary/blocksigner...","...","..."]
-my_node = "Your IP"
-```
-
-Change the port number on [L9](https://github.com/christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L9) to the port number you specified above inside of your [src/chainparamsbase.cpp](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp). You do NOT change the `bitcoin_url` port. 
+Inside `contrib/fedpeg/constants.py`, change the port number on [L9](https://github.com/TomMcCabe/elements/blob/patch/contrib/fedpeg/constants.py) to the port number you specified above inside of your [src/chainparamsbase.cpp](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp). You do NOT change the `bitcoin_url` port. 
 
 We need to create a unique `redeem_script` and `redeem_script_address` for your sidechain. To do this, take the public key[s] in `chainparmas.cpp` and use the `createmultisig` RPC, which will return an address and a redeem script. Adjust [L12-L13](https://github.com/Christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L12-L13) in `constants.py` with the values given by the following RPC command:
 
 ```shell
-alpha-cli -testnet createmultisig sigs_required "[\"public key\", ...]" 
+alpha-cli -testnet createmultisig [sigs_required] "[\"public key\", ...]" 
 ```
 
-You can test this by decoding the redeem script (`alpha-cli -testnet decodescript [redeem script]), which will return a JSON object with the public keys, signatures required and P2SH address. 
+You can test this by decoding the redeem script (`alpha-cli -testnet decodescript [redeem script])`, which will return a JSON object with the public keys, signatures required and P2SH address. 
+
+Replace the `nodes` with the network addresses (i.e. IPs) of your sidechain's blocksigners/functionaries. Add your network address to `my_node`.
 
 Open the `.bashrc` file we edited earlier and add this to the bottom: 
 
