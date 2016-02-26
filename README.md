@@ -103,11 +103,11 @@ secondScriptPubKey = settings.secondScriptPubKey
 ```
 
 Open `contrib/fedpeg/constants.py` and configure your "Various Settings". Also change the [nodes](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/constants.py#L26) and `my node`:
-```
+```python
 # VARIOUS SETTINGS...
 user = os.environ["RPC_USER"]
 password = os.environ["RPC_PASS"]
-sidechain_url = "http://" + user + ":" + password + "@127.0.0.1:PORTNUMBER" //RPC PORT
+sidechain_url = "http://" + user + ":" + password + "@127.0.0.1:PORTNUMBER"
 bitcoin_url = "http://" + user + ":" + password + "@127.0.0.1:18332"
 
 redeem_script = "51210324a5c8922e33c0e66723450715864e1f641b8a37bea9bd3cdb6d6de56c81253e51ae"
@@ -123,14 +123,16 @@ nodes =["IP address of each functionary/blocksigner"]
 my_node = "Your IP"
 ```
 
-We need to create a unique redeem script and redeem script address for your sidechain. To do this, take the public key[s] in `chainparmas.cpp` and use the `createmultisig` RPC, which will return an address and a redeem script. Adjust the `constants.py` file with your returned values:
+The first thing you need to do is change the port number on [L9](https://github.com/christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L9) to the port number you specified above inside of your [src/chainparams.cpp](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp). You do NOT change the `bitcoin_url` port. 
+
+We need to create a unique `redeem_script` and `redeem_script_address` for your sidechain. To do this, take the public key[s] in `chainparmas.cpp` and use the `createmultisig` RPC, which will return an address and a redeem script. Adjust [L12-L13](https://github.com/Christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L12-L13) in `constants.py` with the values given by the following rpc command:
 ```
-alpha-cli -testnet createmultisig sigs_required "[\"public key\", ...]" 
+alpha-cli -testnet createmultisig [sigs_required] "[\"public key\", ...]" 
 ```
 
 You can test this by decoding the redeem script (`alpha-cli -testnet decodescript [redeem script]), which will return a JSON object with the public keys, signatures required and P2SH address. 
 
-Open the `.bashrc` file we edited earlier and add this to the bottom: 
+Open the `~/.bashrc` file we edited earlier and add this to the bottom: 
 ```
 BLOCKSIGNING_PRIV_KEY=[private key generated earlier - associated to the public key in chainparmas.cpp]
 FUNCTIONARY_PRIV_KEY=[some separate generated private key]
