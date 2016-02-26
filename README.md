@@ -41,25 +41,30 @@ git checkout alpha
 
 With bitcoin testnet, generate an address and obtain the private/public key.
 ```
-bitcoin-cli -testnet getnewaddress //returns some address
-bitcoin-cli -testnet validateaddress [address] //returns JSON object. Copy the public key.
-bitcoin-cli -testnet dumpprivkey [address] //returns private key. Save this - we'll need it later for .bashrc file
+bitcoin-cli -testnet getnewaddress 
+//returns some address
+bitcoin-cli -testnet dumpprivkey [address]
+//returns private key. Save this - we'll need it later for .bashrc file
+bitcoin-cli -testnet validateaddress [address]
+//returns JSON object. Copy the public key.
 ```
+
+####C++
 You should be on your sidechain branch (alpha). This is the part where we uniquely create your sidechain with the public keys of each functionary/blocksigner. Open `src/chainparams.cpp` and edit the public keys, ports, and seeds. [Line 132](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L132) has the public keys for each functionary/blocksigner: 
 ```
 scriptDestination = CScript() << OP_5 << ParseHex("027d5d62861df77fc9a37dbe901a579d686d1423be5f56d6fc50bb9de3480871d1") << ParseHex("03b41ea6ba73b94c901fdd43e782aaf70016cc124b72a086e77f6e9f4f942ca9bb") << ParseHex("02be643c3350bade7c96f6f28d1750af2ef507bc1f08dd38f82749214ab90d9037") << ParseHex("021df31471281d4478df85bfce08a10aab82601dca949a79950f8ddf7002bd915a") << ParseHex("0320ea4fcf77b63e89094e681a5bd50355900bf961c10c9c82876cb3238979c0ed") << ParseHex("021c4c92c8380659eb567b497b936b274424662909e1ffebc603672ed8433f4aa1") << ParseHex("027841250cfadc06c603da8bc58f6cd91e62f369826c8718eb6bd114601dd0c5ac") << OP_7 << OP_CHECKMULTISIG;
 ```
-For simplicity, let's replace with current 5-of-7 with a 1-of-1. Change to: 
+For simplicity, let's replace the current 5-of-7 multisig with a 1-of-1. Change to: 
 ```
 scriptDestination = CScript() << OP_1 << ParseHex("[paste public key we just generated]") << OP_1 << OP_CHECKMULTISIG;
 ```
-[Line 139](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L139) has the DNS seeds. You'll need to create one of your own in order to communicate on your port. Replace the current 5 seeds with your own. Also delete the testnet seed on [L198](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L198). 
+[Line 139](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L139) has the DNS seeds. If more you have more than 1 functionary/blocksigner, you'll need to create a DNS of your own in order to communicate. Replace the current 5 seeds with your own. Also delete the testnet seed on [L198](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L198). 
 
-Still in `src/chainparams.cpp`, change the testnet port number on [L182](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L182) - this is the unique channel of communication for your sidechain so don't just increase/decrease it by one. This is one of two ports we'll change. Call this one the protocol port. Keep a side note of this protocol port - we'll need it later.
+Still in `src/chainparams.cpp`, change the testnet port number on [L182](https://github.com/ElementsProject/elements/blob/alpha/src/chainparams.cpp#L182) - this is the unique channel of communication for your sidechain so don't just increase/decrease it by one. This is one of two ports we'll change. Call this one the protocol port.
 
-You need to duplicate what you did on L132 of `src/chainparams.cpp` on [L1451](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1451) of `src/script/interpreter.cpp`. Also in `src/script/interpreter.cpp`, change [L1469](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1469) using [Instagibbs' fix](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf).
+You need to duplicate what you did on L132 of `src/chainparams.cpp` on [L1451](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1451) of `src/script/interpreter.cpp`. (Note: refrain from copying and pasting the line from `chainparams.cpp` to `interpreter.cpp` as they're not identical. Just replace the public keys and op codes numbers on L1452 with your own.) Also in `src/script/interpreter.cpp`, change [L1469](https://github.com/ElementsProject/elements/blob/alpha/src/script/interpreter.cpp#L1469) using [Instagibbs' fix](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf).
 
-Open `src/chainparamsbase.cpp`, change the port on [L43](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp#L43). This is the RPC port - keep it different from the protocol port (i.e. alpha's ports are 4250 and 4251). On L44 of the same file, you can change the name of the data directory for your sidechain (where your blocks, .dat files, etc. will be stored). 
+Open `src/chainparamsbase.cpp`, change the port on [L43](https://github.com/ElementsProject/elements/blob/alpha/src/chainparamsbase.cpp#L43). This is the RPC port - keep it different from the protocol port (i.e. alpha's ports are 4241 and 4242). On L44 of the same file, you can change the name of the data directory for your sidechain (where your blocks, .dat files, etc. will be stored). 
 
 At this point, you can compile your sidechain in the same way we compiled the mainchain earlier. There are a few help/console string messages you can change in `main.cpp, init.cpp, bitcoind.cpp`, but it's not necessary for basic functional purposes. 
 
@@ -75,6 +80,8 @@ mv src/alpha{d,-cli,-tx} ../
 ./alphad -rpcuser=$RPC_USER -rpcpassword=$RPC_PASS -testnet -rpcconnect=127.0.0.1 -rpcconnectport=18332 -tracksidechain=all -txindex -blindtrust=false -daemon
 ```
 
+####Python
+
 Once your sidechain server is running, we can edit the Python files with your unique details. Before we add your unique info, let's modify some settings for ease of use. Open `contrib/sidechain-manipulation.py`. Import `constants.py` by adding this to the top of the `sidechain-manipulation.py` file: 
 
 ```
@@ -82,7 +89,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "fedpeg
 from constants import FedpegConstants
 ```
 
-Change the ["Various Settings"](https://github.com/ElementsProject/elements/blob/alpha/contrib/sidechain-manipulation.py#L52) to this:
+Change the ["Various Settings"](https://github.com/ElementsProject/elements/blob/alpha/contrib/sidechain-manipulation.py#L52):
 
 ```
 # VARIOUS SETTINGS...
@@ -121,10 +128,12 @@ We need to create a unique redeem script and redeem script address for your side
 alpha-cli -testnet createmultisig sigs_required "[\"public key\", ...]" 
 ```
 
-Open the `.bashrc` file we edited earlier and add this: 
+You can test this by decoding the redeem script (`alpha-cli -testnet decodescript [redeem script]), which will return a JSON object with the public keys, signatures required and P2SH address. 
+
+Open the `.bashrc` file we edited earlier and add this to the bottom: 
 ```
 BLOCKSIGNING_PRIV_KEY=[private key generated earlier - associated to the public key in chainparmas.cpp]
-FUNCTIONARY_PRIV_KEY=[some private key]
+FUNCTIONARY_PRIV_KEY=[some separate generated private key]
 export BLOCKSIGNING_PRIV_KEY
 export FUNCTIONARY_PRIV_KEY
 ```
@@ -134,4 +143,6 @@ Also be sure to import both private keys into your sidechain wallet using the RP
 alpha-cli -testnet importprivkey [private key]
 ```
 
-The default sidechain blocktimes are set at 60 seconds. You can adjust the time on [L58](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L58) of `contrib/fedpeg/blocksign.py`. Be sure to change the port numbers in `blocksign.py` and `rotating_consensus.py`.
+The default sidechain blocktimes are set at 60 seconds. You can adjust the time on [L58](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L58) of `contrib/fedpeg/blocksign.py`. Be sure to change the port numbers in `blocksign.py` and `rotating_consensus.py` if you have multiple functionaries/blocksigners.
+
+From here, you can follow [Step 6](https://github.com/ElementsProject/elements/blob/alpha/alpha-README.md#to-move-money-into-elements-alpha) of the Elements-Alpha README to move money into the sidechain.
