@@ -34,11 +34,11 @@ Run testnet. If you get an error asking to rebuild the blockchain, replace `-txi
 ./bitcoind -rpcuser=$RPC_USER -rpcpassword=$RPC_PASS -testnet -txindex -daemon
 ```
 
-Checkout `alpha`. We won't compile just yet. Make sure it is up-to-date with the Elements repo alpha branch and `pull` a [patch](https://github.com/TomMcCabe/elements/tree/patch) for a few code changes that will consolidate our settings in `sidechain-manipulation.py` and `constants.py`, as well as a [secp256k1 fix by Instagibbs](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf) in `src/script/interpreter.cpp` (included in the pull) :
+Checkout `alpha`. Before making any changes of your own,`fetch/merge` a [patch](https://github.com/TomMcCabe/elements/tree/patch) for a few code changes that will consolidate our settings in `sidechain-manipulation.py` and `constants.py`, as well as a [fix by Instagibbs](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf) for an assertion error in `src/script/interpreter.cpp` (included in the merge) :
 ```shell
 git checkout alpha
-git remote add patch https://github.com/TomMcCabe/elements.git
-git pull patch patch
+git fetch https://github.com/TomMcCabe/elements patch
+git merge FETCH_HEAD alpha 
 ```
 
 With bitcoin testnet, generate an address and obtain the private/public key.
