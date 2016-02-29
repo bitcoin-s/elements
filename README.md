@@ -43,11 +43,11 @@ git merge FETCH_HEAD alpha
 
 With bitcoin testnet, generate an address and obtain the private/public key.
 ```
-bitcoin-cli -testnet getnewaddress 
+./bitcoin-cli -testnet getnewaddress 
 //returns some address
-bitcoin-cli -testnet dumpprivkey [address]
+./bitcoin-cli -testnet dumpprivkey [address]
 //returns private key. Save this - we'll need it later for .bashrc file
-bitcoin-cli -testnet validateaddress [address]
+./bitcoin-cli -testnet validateaddress [address]
 //returns JSON object. Copy the public key.
 ```
 
