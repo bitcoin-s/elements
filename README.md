@@ -20,7 +20,7 @@ export RPC_USER
 export RPC_PASS
 ```
 
-Bitcoin testnet (mainchain):
+Build bitcoin (mainchain):
 ```shell
 git clone https://github.com/ElementsProject/elements
 cd elements
@@ -34,7 +34,7 @@ Run testnet. If you get an error asking to rebuild the blockchain, replace `-txi
 ./bitcoind -rpcuser=$RPC_USER -rpcpassword=$RPC_PASS -testnet -txindex -daemon
 ```
 
-Checkout `alpha`. Before making any changes of your own,`fetch/merge` a [patch](https://github.com/TomMcCabe/elements/tree/patch) for a few code changes that will consolidate our settings in `sidechain-manipulation.py` and `constants.py`, as well as a [fix by Instagibbs](https://github.com/instagibbs/elements/commit/d390521215f1b47f8d46e8af728c5d353e1db4bf) for an assertion error in `src/script/interpreter.cpp` (included in the merge) :
+Checkout `alpha`. Before making any changes of your own,`fetch/merge` a [patch](https://github.com/TomMcCabe/elements/tree/patch) for a few code changes that will consolidate our settings in `sidechain-manipulation.py` and `constants.py` ([PR #86 of Elements Repo](https://github.com/ElementsProject/elements/pull/86)):
 ```shell
 git checkout alpha
 git fetch https://github.com/TomMcCabe/elements patch
