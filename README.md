@@ -100,7 +100,7 @@ Inside `contrib/fedpeg/constants.py`, change the port number on [L9](https://git
 We need to create a unique `redeem_script` and `redeem_script_address` for your sidechain. To do this, take the public key[s] in `chainparmas.cpp` and use the `createmultisig` RPC, which will return an address and a redeem script. Adjust [L12-L13](https://github.com/Christewart/elements/blob/sidechain/contrib/fedpeg/constants.py#L12-L13) in `constants.py` with the values given by the following RPC command:
 
 ```shell
-alpha-cli -testnet createmultisig [sigs_required] "[\"public key\", ...]" 
+./alpha-cli -testnet createmultisig [sigs_required] "[\"public key\", ...]" 
 ```
 
 You can test this by decoding the redeem script (`alpha-cli -testnet decodescript [redeem script])`, which will return a JSON object with the public keys, signatures required and P2SH address. 
@@ -119,7 +119,7 @@ export FUNCTIONARY_PRIV_KEY
 Also be sure to import both private keys into your sidechain wallet using the RPC command: 
 
 ```shell
-alpha-cli -testnet importprivkey [private key]
+./alpha-cli -testnet importprivkey [private key]
 ```
 
 The default sidechain blocktimes are set at 60 seconds. You can adjust the time on [L58](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L58) of `contrib/fedpeg/blocksign.py`. Be sure to change the port number in [blocksign.py](https://github.com/ElementsProject/elements/blob/alpha/contrib/fedpeg/blocksign.py#L14) if you have multiple functionaries/blocksigners.
