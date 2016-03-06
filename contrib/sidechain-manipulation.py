@@ -190,8 +190,8 @@ try:
 
 	elif args.command == "claim-on-sidechain":
 		raw_bitcoin_tx = bitcoin.getrawtransaction(args.sidechainRcvTx, 1)
-		if not "confirmations" in raw_bitcoin_tx or raw_bitcoin_tx["confirmations"] <= 1:
-			print("Please wait for at least 1 confirmations on the bitcoin transaction first")
+		if not "confirmations" in raw_bitcoin_tx or raw_bitcoin_tx["confirmations"] <= 10:
+			print("Please wait for at least 10 confirmations on the bitcoin transaction first")
 			exit(1)
 		raw_bitcoin_tx_hex = bitcoin.getrawtransaction(args.sidechainRcvTx, 0)
 
